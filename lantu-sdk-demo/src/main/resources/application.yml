@@ -1,0 +1,7 @@
+server:
+  port: 9001
+ltzf:
+  wx:
+    mch-id: ""
+    secret-key: ""
+    notify-url: ""
