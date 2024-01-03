@@ -3,8 +3,10 @@ package com.ltzf.sdkjava.demo.controller;
 import cn.ltzf.sdkjava.api.LantuWxPayService;
 import cn.ltzf.sdkjava.bean.request.LantuWxPayGetWechatOpenIdRequest;
 import cn.ltzf.sdkjava.bean.request.LantuWxPayNativeOrderRequest;
+import cn.ltzf.sdkjava.bean.request.LantuWxPayQueryOrderRequest;
 import cn.ltzf.sdkjava.bean.request.LantuWxPayRefundOrderRequest;
 import cn.ltzf.sdkjava.bean.result.LantuWxPayNativeOrderResult;
+import cn.ltzf.sdkjava.bean.result.LantuWxPayQueryOrderResult;
 import cn.ltzf.sdkjava.bean.result.LantuWxPayRefundOrderResult;
 import cn.ltzf.sdkjava.common.error.LantuPayErrorException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +43,19 @@ public class DemoController {
         request.setTotalFee("0.01");
         request.setBody("测试商品");
         LantuWxPayNativeOrderResult result = lantuWxPayService.createNativeOrder(request);
+        return result;
+    }
+    
+    /**
+     * 测试蓝兔支付 PC端扫描请求
+     *
+     * @return
+     */
+    @GetMapping("/query")
+    public LantuWxPayQueryOrderResult query(String num) {
+        LantuWxPayQueryOrderRequest request = new LantuWxPayQueryOrderRequest();
+        request.setOutTradeNo(num);
+        LantuWxPayQueryOrderResult result = lantuWxPayService.getPayOrder(request);
         return result;
     }
     

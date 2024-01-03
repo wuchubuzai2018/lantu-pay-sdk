@@ -29,11 +29,14 @@ Spring Boot Starter工程：lantu-sdk-spring-boot-starter
 - 20231229：开发HTTP请求框架：HTTP请求框架与存储层配置
 - 20231231：开发PC端二维码下单接口：PC下单支付请求流程
 - 20240102：开发订单退款接口：订单退款API
+- 20240103：开发订单查询接口：订单查询API
 
 3、目前实现功能如下：
 
 - PC端扫码支付API(LantuWxPayNativeOrderRequest)
 - 订单退款API(LantuWxPayRefundOrderRequest)
+- 订单查询API(LantuWxPayQueryOrderRequest)
+- 查询微信授权连接API(LantuWxPayGetWechatOpenIdRequest)
 
 # 五、使用步骤
 
@@ -92,11 +95,13 @@ public class DemoController {
 
 # 六、参与贡献
 
-1、加入知识星球，与作者沟通想要开发的内容，然后开发并提交PR。
+1、工程中采用checkstyle.xml文件作为代码风格的统一与质量检测，在开发时需要导入项目中的该文件进行检测
 
-2、工程中采用checkstyle.xml文件作为代码风格的统一与质量检测。
+2、fork当前仓库到自己的仓库，然后在develop分支上进行开发，然后提交PR
+
+3、加入知识星球，与作者沟通交流
+
 
 # 七、知识星球
 
-
-![我的知识星球](https://github.com/wuchubuzai2018/lantu-pay-sdk/assets/42382506/6bbc7f10-55c7-4507-9d20-1141c2b81355)
+知识星球：觉醒的新世界程序员

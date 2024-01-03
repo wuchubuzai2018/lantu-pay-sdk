@@ -3,9 +3,11 @@ package cn.ltzf.sdkjava.api.impl;
 import cn.ltzf.sdkjava.api.LantuWxPayService;
 import cn.ltzf.sdkjava.bean.request.LantuWxPayGetWechatOpenIdRequest;
 import cn.ltzf.sdkjava.bean.request.LantuWxPayNativeOrderRequest;
+import cn.ltzf.sdkjava.bean.request.LantuWxPayQueryOrderRequest;
 import cn.ltzf.sdkjava.bean.request.LantuWxPayRefundOrderRequest;
 import cn.ltzf.sdkjava.bean.result.LantuWxPayGetWechatOpenIdResult;
 import cn.ltzf.sdkjava.bean.result.LantuWxPayNativeOrderResult;
+import cn.ltzf.sdkjava.bean.result.LantuWxPayQueryOrderResult;
 import cn.ltzf.sdkjava.bean.result.LantuWxPayRefundOrderResult;
 import cn.ltzf.sdkjava.common.error.LantuError;
 import cn.ltzf.sdkjava.common.error.LantuPayErrorException;
@@ -158,6 +160,18 @@ public abstract class BaseLantuWxPayServiceImpl<H, P> implements LantuWxPayServi
         String formBody = request.toFormBody();
         String resultText = this.post(url, formBody);
         return LantuWxPayGetWechatOpenIdResult.fromJson(resultText);
+    }
+    
+    @Override
+    public LantuWxPayQueryOrderResult getPayOrder(LantuWxPayQueryOrderRequest request) throws LantuPayErrorException {
+        // 检测参数并生成签名信息
+        request.checkAndSign(this.getLantuWxConfigStorage());
+        // 定义请求URL
+        String url = this.getBaseUrl() + "/api/wxpay/get_pay_order";
+        // 转换对象请求为form结构形式
+        String formBody = request.toFormBody();
+        String resultText = this.post(url, formBody);
+        return LantuWxPayQueryOrderResult.fromJson(resultText);
     }
     
 }

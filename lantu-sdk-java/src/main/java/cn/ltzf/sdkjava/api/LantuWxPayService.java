@@ -2,8 +2,10 @@ package cn.ltzf.sdkjava.api;
 
 import cn.ltzf.sdkjava.bean.request.LantuWxPayGetWechatOpenIdRequest;
 import cn.ltzf.sdkjava.bean.request.LantuWxPayNativeOrderRequest;
+import cn.ltzf.sdkjava.bean.request.LantuWxPayQueryOrderRequest;
 import cn.ltzf.sdkjava.bean.request.LantuWxPayRefundOrderRequest;
 import cn.ltzf.sdkjava.bean.result.LantuWxPayNativeOrderResult;
+import cn.ltzf.sdkjava.bean.result.LantuWxPayQueryOrderResult;
 import cn.ltzf.sdkjava.bean.result.LantuWxPayRefundOrderResult;
 import cn.ltzf.sdkjava.common.error.LantuPayErrorException;
 import cn.ltzf.sdkjava.common.http.RequestExecutor;
@@ -96,4 +98,13 @@ public interface LantuWxPayService {
      * @throws LantuPayErrorException 异常信息
      */
     String getWechatOpenIdAuthorizeUrl(LantuWxPayGetWechatOpenIdRequest request) throws LantuPayErrorException;
+    
+    /**
+     * 查询蓝兔支付的订单
+     * @param request 请求信息
+     * @return 查询订单结果
+     * @throws LantuPayErrorException 异常信息
+     */
+    public LantuWxPayQueryOrderResult getPayOrder(LantuWxPayQueryOrderRequest request) throws LantuPayErrorException;
+    
 }
