@@ -9,47 +9,45 @@ import lombok.EqualsAndHashCode;
 import java.util.Map;
 
 /**
+ * 订单退款请求
+ *
  * @author wuchubuzai
  * @date 2024-01-01 15:55:42
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class LantuWxPayNativeOrderRequest extends AbstractWxPayRequest {
+public class LantuWxPayRefundOrderRequest extends AbstractWxPayRequest {
     
     @JSONField(name = "out_trade_no")
     @Required
     private String outTradeNo;
     
-    @JSONField(name = "total_fee")
+    @JSONField(name = "out_refund_no")
     @Required
-    private String totalFee;
+    private String outRefundNo;
     
-    @JSONField(name = "body")
+    @JSONField(name = "refund_fee")
     @Required
-    private String body;
+    private String refundFee;
+    
+    @JSONField(name = "refund_desc")
+    private String refundDesc;
     
     @JSONField(name = "notify_url")
-    @Required
     private String notifyUrl;
-    
-    @JSONField(name = "attach")
-    private String attach;
-    
-    @JSONField(name = "time_expire")
-    private String timeExpire;
     
     @Override
     protected String[] getIgnoredParamsForSign() {
-        return new String[]{"attach", "timeExpire"};
+        return new String[]{"refundDesc", "notifyUrl"};
     }
     
     @Override
     protected void storeMap(Map<String, String> map) {
         map.put("out_trade_no", outTradeNo);
-        map.put("total_fee", totalFee);
-        map.put("body", body);
+        map.put("out_refund_no", outRefundNo);
         map.put("notify_url", notifyUrl);
-        map.put("attach", attach);
-        map.put("time_expire", timeExpire);
+        map.put("refund_fee", refundFee);
+        map.put("refund_desc", refundDesc);
     }
+    
 }

@@ -9,7 +9,7 @@ import java.io.IOException;
 /**
  * 简单的POST请求执行器，请求的参数是String, 返回的结果也是String
  *
- * @author Long Yu
+ * @author Wuchubuzai
  */
 public abstract class AbstractPostRequestExecutor<H, P> implements RequestExecutor<String, String> {
     

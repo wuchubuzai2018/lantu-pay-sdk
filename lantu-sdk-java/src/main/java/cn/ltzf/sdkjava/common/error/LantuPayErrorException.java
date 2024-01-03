@@ -8,15 +8,30 @@ package cn.ltzf.sdkjava.common.error;
  */
 public class LantuPayErrorException extends RuntimeException {
     
+    private static final int DEFAULT_ERROR_CODE = -99;
+    
+    private final LantuError error;
+    
     public LantuPayErrorException(String message) {
-        super(message);
+        this(LantuError.builder().code(DEFAULT_ERROR_CODE).msg(message).build());
     }
     
-    public LantuPayErrorException(String message, Throwable cause) {
-        super(message, cause);
+    public LantuPayErrorException(LantuError error) {
+        super(error.toString());
+        this.error = error;
+    }
+    
+    public LantuPayErrorException(LantuError error, Throwable cause) {
+        super(error.toString(), cause);
+        this.error = error;
     }
     
     public LantuPayErrorException(Throwable cause) {
         super(cause.getMessage(), cause);
+        this.error = LantuError.builder().code(DEFAULT_ERROR_CODE).msg(cause.getMessage()).build();
+    }
+    
+    public LantuError getError() {
+        return this.error;
     }
 }

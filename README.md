@@ -2,19 +2,19 @@
 
 # 一、项目介绍
 
-支持个人用户签约使用的蓝兔支付平台的Java SDK项目。
+支持个人用户签约使用的蓝兔支付平台的Java SDK项目。API接口来源：https://www.ltzf.cn/doc
 
 # 二、项目内容
 
-计划针对蓝兔支付平台的接口，封装支付SDK，SDK设计思想采用开源项目wxjava的设计思想，相关的类设计参考其进行设计。
+计划针对蓝兔支付平台的接口，封装支付SDK，SDK设计与使用参考开源项目wxjava中相关的类设计。
 
 # 三、工程结构
 
 docs：工程的相关文档
 
-Demo工程：lantu-sdk-demo
+SDK支付的Demo工程：lantu-sdk-demo
 
-SDK-JAVA工程：lantu-sdk-java
+SDK的JAVA工程：lantu-sdk-java
 
 Spring Boot Starter工程：lantu-sdk-spring-boot-starter
 
@@ -25,13 +25,15 @@ Spring Boot Starter工程：lantu-sdk-spring-boot-starter
 
 2、开发进度如下：
 
-- 20231218：已提交第1节基本结构代码：Lantu SDK Spring Starter
-- 20231229：已提交第2节基本结构代码：HTTP请求框架与存储层配置
-- 20231231：已提交第3节基本结构代码：PC下单支付请求流程
+- 20231218：开发Starter：Lantu SDK Spring Starter
+- 20231229：开发HTTP请求框架：HTTP请求框架与存储层配置
+- 20231231：开发PC端二维码下单接口：PC下单支付请求流程
+- 20240102：开发订单退款接口：订单退款API
 
 3、目前实现功能如下：
 
-- 二维码下单请求接口
+- PC端扫码支付API(LantuWxPayNativeOrderRequest)
+- 订单退款API(LantuWxPayRefundOrderRequest)
 
 # 五、使用步骤
 

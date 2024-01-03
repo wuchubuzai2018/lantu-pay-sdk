@@ -1,13 +1,18 @@
 package cn.ltzf.sdkjava.api;
 
+import cn.ltzf.sdkjava.bean.request.LantuWxPayGetWechatOpenIdRequest;
 import cn.ltzf.sdkjava.bean.request.LantuWxPayNativeOrderRequest;
+import cn.ltzf.sdkjava.bean.request.LantuWxPayRefundOrderRequest;
 import cn.ltzf.sdkjava.bean.result.LantuWxPayNativeOrderResult;
+import cn.ltzf.sdkjava.bean.result.LantuWxPayRefundOrderResult;
 import cn.ltzf.sdkjava.common.error.LantuPayErrorException;
 import cn.ltzf.sdkjava.common.http.RequestExecutor;
 import cn.ltzf.sdkjava.common.http.RequestHttp;
 import cn.ltzf.sdkjava.config.LantuWxConfigStorage;
 
 /**
+ * 蓝兔支付的微信支付的核心Service类
+ *
  * @author Wuchubuzai
  * @date 2023-12-15 07:53:16
  */
@@ -71,4 +76,24 @@ public interface LantuWxPayService {
      */
     public LantuWxPayNativeOrderResult createNativeOrder(LantuWxPayNativeOrderRequest request) throws LantuPayErrorException;
     
+    /**
+     * 订单退款 API
+     * @param request 请求信息
+     * @return 响应结果
+     * @throws LantuPayErrorException 异常
+     */
+    public LantuWxPayRefundOrderResult refund(LantuWxPayRefundOrderRequest request) throws LantuPayErrorException;
+    
+    /**
+     * 获取微信Openid授权连接的API
+     * 授权链接，在微信里访问这个链接，访问后将自动跳转到您填写的回调地址，地址后面会增加openid和attach参数
+     * （例如：https://www.ltzf.cn/?openid=XXXXXX&attach=自定义数据）
+     * 示例值：https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxa3d61201263587a8&redirect_uri
+     * =https://api.ltzf.cn/api/wxpay/wx_oauth&response_type=code&scope=snsapi_base&state=
+     * AB23F31B5F0C863B344C8D59605B0809#wechat_redirect
+     * @param request 请求信息
+     * @return 授权连接
+     * @throws LantuPayErrorException 异常信息
+     */
+    String getWechatOpenIdAuthorizeUrl(LantuWxPayGetWechatOpenIdRequest request) throws LantuPayErrorException;
 }

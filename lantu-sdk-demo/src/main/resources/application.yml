@@ -2,6 +2,6 @@ server:
   port: 9001
 ltzf:
   wx:
-    mch-id: ""
-    secret-key: ""
-    notify-url: ""
+    mch-id: "xxx"
+    secret-key: "xxxxx"
+    notify-url: "xxxxxxx"
