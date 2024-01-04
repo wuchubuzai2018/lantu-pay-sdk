@@ -6,9 +6,13 @@ import cn.ltzf.sdkjava.bean.request.LantuWxPayNativeOrderRequest;
 import cn.ltzf.sdkjava.bean.request.LantuWxPayQueryOrderRequest;
 import cn.ltzf.sdkjava.bean.request.LantuWxPayRefundOrderRequest;
 import cn.ltzf.sdkjava.bean.result.LantuWxPayNativeOrderResult;
+import cn.ltzf.sdkjava.bean.result.LantuWxPayNotifyOrderResult;
 import cn.ltzf.sdkjava.bean.result.LantuWxPayQueryOrderResult;
 import cn.ltzf.sdkjava.bean.result.LantuWxPayRefundOrderResult;
 import cn.ltzf.sdkjava.common.error.LantuPayErrorException;
+import cn.ltzf.sdkjava.constant.LantuPayConstant;
+import com.alibaba.fastjson.JSON;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,6 +29,7 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/demo")
+@Slf4j
 public class DemoController {
     
     @Autowired
@@ -47,7 +52,7 @@ public class DemoController {
     }
     
     /**
-     * 测试蓝兔支付 PC端扫描请求
+     * 测试蓝兔支付 查询订单
      *
      * @return
      */
@@ -66,7 +71,8 @@ public class DemoController {
      * @return 退款操作结果
      */
     @PostMapping("/refund")
-    public LantuWxPayRefundOrderResult refund(@RequestBody LantuWxPayRefundOrderRequest request) throws LantuPayErrorException {
+    public LantuWxPayRefundOrderResult refund(@RequestBody LantuWxPayRefundOrderRequest request)
+            throws LantuPayErrorException {
         return this.lantuWxPayService.refund(request);
     }
     
@@ -80,9 +86,32 @@ public class DemoController {
         LantuWxPayGetWechatOpenIdRequest request = new LantuWxPayGetWechatOpenIdRequest();
         request.setCallbackUrl("http://publicdomainname");
         String wechatOpenIdAuthorizeUrl = lantuWxPayService.getWechatOpenIdAuthorizeUrl(request);
-        Map<String, String> result = new HashMap<String, String>();
+        Map<String, String> result = new HashMap<String, String>(2);
         result.put("url", wechatOpenIdAuthorizeUrl);
         return result;
     }
     
+    /**
+     * 测试蓝兔支付 接收订单的支付回调
+     *
+     * @return
+     */
+    @GetMapping("/notify")
+    public String notify(Map<String, String> params) {
+        try {
+            if(params == null || params.isEmpty()){
+                return LantuPayConstant.FAIL;
+            }
+            // 将参数转换为JSON
+            String json = JSON.toJSONString(params);
+            log.info("支付回调接口接收到参数:{}", json);
+            LantuWxPayNotifyOrderResult result = this.lantuWxPayService.parseOrderNotifyResult(json);
+            // 计算签名信息
+            log.info("蓝兔微信支付异步通知请求解析后的对象：{}", result);
+            // 模拟业务进行处理
+            return LantuPayConstant.SUCCESS;
+        } catch (Exception e) {
+            return LantuPayConstant.FAIL;
+        }
+    }
 }

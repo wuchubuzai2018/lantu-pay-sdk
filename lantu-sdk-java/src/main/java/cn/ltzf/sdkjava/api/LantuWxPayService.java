@@ -5,6 +5,7 @@ import cn.ltzf.sdkjava.bean.request.LantuWxPayNativeOrderRequest;
 import cn.ltzf.sdkjava.bean.request.LantuWxPayQueryOrderRequest;
 import cn.ltzf.sdkjava.bean.request.LantuWxPayRefundOrderRequest;
 import cn.ltzf.sdkjava.bean.result.LantuWxPayNativeOrderResult;
+import cn.ltzf.sdkjava.bean.result.LantuWxPayNotifyOrderResult;
 import cn.ltzf.sdkjava.bean.result.LantuWxPayQueryOrderResult;
 import cn.ltzf.sdkjava.bean.result.LantuWxPayRefundOrderResult;
 import cn.ltzf.sdkjava.common.error.LantuPayErrorException;
@@ -107,4 +108,11 @@ public interface LantuWxPayService {
      */
     public LantuWxPayQueryOrderResult getPayOrder(LantuWxPayQueryOrderRequest request) throws LantuPayErrorException;
     
+    /**
+     * 解析订单回调通知结果
+     * @param jsonData 返回的json字符串
+     * @return 结果
+     * @throws LantuPayErrorException 异常
+     */
+    public LantuWxPayNotifyOrderResult parseOrderNotifyResult(String jsonData) throws LantuPayErrorException;
 }

@@ -1,8 +1,9 @@
 package cn.ltzf.sdkjava.util;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Map;
 
@@ -11,6 +12,8 @@ import java.util.Map;
  * @date 2024-01-01 18:35:22
  */
 public class LantuRequestDataUtil {
+    
+    private static final Logger LOGGER = LoggerFactory.getLogger(LantuRequestDataUtil.class);
     
     private LantuRequestDataUtil(){
     
@@ -37,18 +40,26 @@ public class LantuRequestDataUtil {
             }
             sb.append(param.getKey()).append("=");
             if (urlEncoder) {
-                try {
-                    value = urlEncode(value);
-                } catch (UnsupportedEncodingException e) {
-                    //
-                }
+                value = urlEncode(value);
             }
             sb.append(value);
         }
         return sb.toString();
     }
     
-    public static String urlEncode(String src) throws UnsupportedEncodingException {
-        return URLEncoder.encode(src, "utf-8");
+    /**
+     * URL编码
+     * @param value 参数值
+     * @return 编码值
+     */
+    public static String urlEncode(String value)  {
+        String newVal = null;
+        try {
+            newVal = URLEncoder.encode(value, "utf-8");
+        } catch (Exception e) {
+            LOGGER.warn("value编码出现异常,值为:{}", value);
+            newVal = value;
+        }
+        return newVal;
     }
 }

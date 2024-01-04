@@ -7,6 +7,7 @@ import cn.ltzf.sdkjava.bean.request.LantuWxPayQueryOrderRequest;
 import cn.ltzf.sdkjava.bean.request.LantuWxPayRefundOrderRequest;
 import cn.ltzf.sdkjava.bean.result.LantuWxPayGetWechatOpenIdResult;
 import cn.ltzf.sdkjava.bean.result.LantuWxPayNativeOrderResult;
+import cn.ltzf.sdkjava.bean.result.LantuWxPayNotifyOrderResult;
 import cn.ltzf.sdkjava.bean.result.LantuWxPayQueryOrderResult;
 import cn.ltzf.sdkjava.bean.result.LantuWxPayRefundOrderResult;
 import cn.ltzf.sdkjava.common.error.LantuError;
@@ -16,6 +17,7 @@ import cn.ltzf.sdkjava.common.http.BodyTypeEnums;
 import cn.ltzf.sdkjava.common.http.RequestExecutor;
 import cn.ltzf.sdkjava.common.http.RequestHttp;
 import cn.ltzf.sdkjava.config.LantuWxConfigStorage;
+import com.alibaba.fastjson.JSON;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -172,6 +174,21 @@ public abstract class BaseLantuWxPayServiceImpl<H, P> implements LantuWxPayServi
         String formBody = request.toFormBody();
         String resultText = this.post(url, formBody);
         return LantuWxPayQueryOrderResult.fromJson(resultText);
+    }
+    
+    @Override
+    public LantuWxPayNotifyOrderResult parseOrderNotifyResult(String jsonData) throws LantuPayErrorException {
+        try {
+            LantuWxPayNotifyOrderResult result = JSON.parseObject(jsonData,
+                    LantuWxPayNotifyOrderResult.class);
+            
+            result.checkResult(this);
+            return result;
+        } catch (LantuPayErrorException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new LantuPayErrorException("发生异常！");
+        }
     }
     
 }

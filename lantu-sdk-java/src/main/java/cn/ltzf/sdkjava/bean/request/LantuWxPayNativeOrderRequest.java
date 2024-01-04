@@ -52,4 +52,12 @@ public class LantuWxPayNativeOrderRequest extends AbstractWxPayRequest {
         map.put("attach", attach);
         map.put("time_expire", timeExpire);
     }
+    
+    /**
+     * 下单请求增加URL编码，可能请求参数中包含特殊字符
+     * @return 返回true
+     */
+    protected boolean shouldUrlEncoder() {
+        return true;
+    }
 }

@@ -124,7 +124,7 @@ public abstract class AbstractWxPayRequest implements Serializable {
         // 根据当前对象生成请求的form body结构字符串
         Map<String, String> requestParams = new TreeMap<>(this.getSignParams());
         requestParams.put("sign", sign);
-        return LantuRequestDataUtil.generateUrlEncode(false, requestParams);
+        return LantuRequestDataUtil.generateUrlEncode(shouldUrlEncoder(), requestParams);
     }
     
     /**
@@ -134,6 +134,14 @@ public abstract class AbstractWxPayRequest implements Serializable {
      * @param map 传入的属性Map
      */
     protected abstract void storeMap(Map<String, String> map);
+    
+    /**
+     * URL中的参数值是否需要编码,默认false,如果当前URL存在特殊字符可以进行编码
+     * @return
+     */
+    protected boolean shouldUrlEncoder() {
+        return false;
+    }
     
     /**
      * 检查约束情况 子类可以根据情况进行处理.
