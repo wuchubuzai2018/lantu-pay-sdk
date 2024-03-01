@@ -118,9 +118,6 @@ public class DemoController {
 //        } catch (Exception e) {
 //            return LantuPayConstant.FAIL;
 //        }
-//    bcf6973e02570312e14b3a4cabbd16ed
-    @Value("${ltzf.wx.secret-key}")
-    private String ltSecretKey;
 
     /**
      * 支付回调
