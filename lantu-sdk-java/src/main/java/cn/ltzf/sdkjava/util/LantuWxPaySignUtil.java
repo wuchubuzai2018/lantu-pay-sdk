@@ -17,12 +17,12 @@ import java.util.TreeMap;
  * @date 2024-01-01 15:06:06
  */
 public class LantuWxPaySignUtil {
-    
+
     private static final List<String> NO_SIGN_PARAMS = Arrays.asList("sign");
-    
+
     private LantuWxPaySignUtil() {
     }
-    
+
     /**
      * 生成签名
      *
@@ -43,7 +43,7 @@ public class LantuWxPaySignUtil {
         }
         return createMapSign(map, signKey, ignoredParams);
     }
-    
+
     /**
      * 支付参数签名
      *
@@ -63,7 +63,7 @@ public class LantuWxPaySignUtil {
             if (StringUtils.isNotEmpty(value) && !ArrayUtils.contains(ignoredParams, key)) {
                 shouldSign = true;
             }
-        
+
             if (shouldSign) {
                 toSign.append(key).append("=").append(value).append("&");
             }
@@ -71,7 +71,7 @@ public class LantuWxPaySignUtil {
         toSign.append("key=").append(signKey);
         return DigestUtils.md5Hex(toSign.toString()).toUpperCase();
     }
-    
+
     /**
      * 校验签名是否正确.
      *
@@ -80,8 +80,9 @@ public class LantuWxPaySignUtil {
      * @return true - 签名校验成功，false - 签名校验失败
      */
     public static boolean checkSign(Map<String, String> params, String signKey) {
+        String signUsed = params.get("sign");
         String sign = createMapSign(params, signKey, new String[0]);
-        return sign.equals(params.get("sign"));
+        // 问题原因： 在进入createMapSign之后， 已经删除了sign。所以通过params.get("sign")肯定无法得到
+        return sign.equals(signUsed);
     }
-    
 }

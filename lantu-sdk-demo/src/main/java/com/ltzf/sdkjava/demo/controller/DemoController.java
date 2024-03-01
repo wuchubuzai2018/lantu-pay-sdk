@@ -20,8 +20,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.net.URLDecoder;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author wuchubuzai
@@ -92,26 +96,46 @@ public class DemoController {
     }
     
     /**
-     * 测试蓝兔支付 接收订单的支付回调
+     * 支付回调，在企业级开发中这里需要增加分布式锁进行处理
      *
+     * @param requestBody 接收的参数 参数的格式为：key1=value1&key2=value2
+     *                    也可以使用@RequestParam注解+Map的形式
      * @return
      */
-    @GetMapping("/notify")
-    public String notify(Map<String, String> params) {
-        try {
-            if(params == null || params.isEmpty()){
-                return LantuPayConstant.FAIL;
-            }
-            // 将参数转换为JSON
-            String json = JSON.toJSONString(params);
-            log.info("支付回调接口接收到参数:{}", json);
-            LantuWxPayNotifyOrderResult result = this.lantuWxPayService.parseOrderNotifyResult(json);
-            // 计算签名信息
-            log.info("蓝兔微信支付异步通知请求解析后的对象：{}", result);
-            // 模拟业务进行处理
-            return LantuPayConstant.SUCCESS;
-        } catch (Exception e) {
-            return LantuPayConstant.FAIL;
-        }
+    @PostMapping("/notify")
+    public String notify(@RequestBody String requestBody) {
+        log.info("requestBody： {}", requestBody);
+        Map<String, String> params = new HashMap<String, String>();
+        params = parseQueryString(requestBody);
+        // 将参数转换为JSON
+        String json = JSON.toJSONString(params);
+        log.info("支付回调接口接收到参数:{}", json);
+        LantuWxPayNotifyOrderResult result = this.lantuWxPayService.parseOrderNotifyResult(json);
+        log.info("校验成功， 处理订单。");
+        String orderId = params.get("out_trade_no");
+        String transactionId = params.get("order_no");
+        // 模拟业务进行处理
+        log.info("支付成功 out_trade_no:{} trade_no:{}", orderId, transactionId);
+        // 计算签名信息
+        log.info("蓝兔微信支付异步通知请求解析后的结果：{}", result);
+        // 模拟业务进行处理
+        return LantuPayConstant.SUCCESS;
+        
     }
+    
+    /**
+     * 自定义query转为map
+     *
+     * @param query 请求的参数
+     * @return
+     */
+    private Map<String, String> parseQueryString(String query) {
+        return Arrays.stream(query.split("&")).map(param -> param.split("="))
+                .collect(Collectors.toMap(e -> URLDecoder.decode(e[0]), // 解码键
+                        e -> e.length > 1 ? URLDecoder.decode(e[1]) : "", // 解码值，如果存在
+                        (prev, next) -> next, // 如果有重复的键，使用最新的值
+                        LinkedHashMap::new)); // 保持插入顺序
+    }
+    
 }
+

@@ -68,6 +68,7 @@ public class LantuWxPayNotifyOrderResult {
         map.put("out_trade_no", outTradeNo);
         map.put("pay_no", payNo);
         map.put("total_fee", totalFee);
+        map.put("sign", sign);
         boolean result = LantuWxPaySignUtil.checkSign(map, lantuWxPayService.getLantuWxConfigStorage().getSecretKey());
         if (!result) {
             throw new LantuPayErrorException("参数格式校验错误！");
