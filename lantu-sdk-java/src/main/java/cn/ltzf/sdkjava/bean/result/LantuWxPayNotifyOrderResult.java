@@ -68,6 +68,8 @@ public class LantuWxPayNotifyOrderResult {
         map.put("out_trade_no", outTradeNo);
         map.put("pay_no", payNo);
         map.put("total_fee", totalFee);
+        map.put("sign", sign);
+        // {"code":"0","timestamp":"1709172020","mch_id":"1667746679","order_no":"WX202402290959561957159999","out_trade_no":"20231709171995689","pay_no":"4200002108202402298072994957","total_fee":"0.01","sign":"0877AF7E4489DAB2F26F8C5D06084D7A","pay_channel":"wxpay","trade_type":"NATIVE","success_time":"2024-02-29 10:00:19","attach":"","openid":"o5wq46CadPI******woSlhxK7tz4"}
         boolean result = LantuWxPaySignUtil.checkSign(map, lantuWxPayService.getLantuWxConfigStorage().getSecretKey());
         if (!result) {
             throw new LantuPayErrorException("参数格式校验错误！");

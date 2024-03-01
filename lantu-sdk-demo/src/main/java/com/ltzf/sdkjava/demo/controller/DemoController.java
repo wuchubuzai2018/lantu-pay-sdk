@@ -1,5 +1,5 @@
 package com.ltzf.sdkjava.demo.controller;
-
+import cn.hutool.core.net.URLDecoder;
 import cn.ltzf.sdkjava.api.LantuWxPayService;
 import cn.ltzf.sdkjava.bean.request.LantuWxPayGetWechatOpenIdRequest;
 import cn.ltzf.sdkjava.bean.request.LantuWxPayNativeOrderRequest;
@@ -14,14 +14,19 @@ import cn.ltzf.sdkjava.constant.LantuPayConstant;
 import com.alibaba.fastjson.JSON;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author wuchubuzai
@@ -96,22 +101,70 @@ public class DemoController {
      *
      * @return
      */
-    @GetMapping("/notify")
-    public String notify(Map<String, String> params) {
-        try {
-            if(params == null || params.isEmpty()){
-                return LantuPayConstant.FAIL;
-            }
-            // 将参数转换为JSON
-            String json = JSON.toJSONString(params);
-            log.info("支付回调接口接收到参数:{}", json);
-            LantuWxPayNotifyOrderResult result = this.lantuWxPayService.parseOrderNotifyResult(json);
-            // 计算签名信息
-            log.info("蓝兔微信支付异步通知请求解析后的对象：{}", result);
-            // 模拟业务进行处理
-            return LantuPayConstant.SUCCESS;
-        } catch (Exception e) {
-            return LantuPayConstant.FAIL;
-        }
+//    @GetMapping("/notify")
+//    public String notify(Map<String, String> params) {
+//        try {
+//            if (params == null || params.isEmpty()) {
+//                return LantuPayConstant.FAIL;
+//            }
+//            // 将参数转换为JSON
+//            String json = JSON.toJSONString(params);
+//            log.info("支付回调接口接收到参数:{}", json);
+//            LantuWxPayNotifyOrderResult result = this.lantuWxPayService.parseOrderNotifyResult(json);
+//            // 计算签名信息
+//            log.info("蓝兔微信支付异步通知请求解析后的对象：{}", result);
+//            // 模拟业务进行处理
+//            return LantuPayConstant.SUCCESS;
+//        } catch (Exception e) {
+//            return LantuPayConstant.FAIL;
+//        }
+//    bcf6973e02570312e14b3a4cabbd16ed
+    @Value("${ltzf.wx.secret-key}")
+    private String ltSecretKey;
+
+    /**
+     * 支付回调
+     * @param requestBody
+     * @return
+     */
+    @PostMapping("/notify")
+    public String notify(@RequestBody String requestBody){
+
+        System.out.println();
+        log.info("requestBody： {}", requestBody);
+        Map<String,String> params = new HashMap<String,String>();
+        params = parseQueryString(requestBody);
+        // 将参数转换为JSON
+        String json = JSON.toJSONString(params);
+        log.info("支付回调接口接收到参数:{}", json);
+        LantuWxPayNotifyOrderResult result = this.lantuWxPayService.parseOrderNotifyResult(json);
+        log.info("校验成功， 处理订单。");
+        String orderId = params.get("out_trade_no");
+        String transaction_id = params.get("order_no");
+        // 模拟业务进行处理
+        log.info("支付成功 out_trade_no:{} trade_no:{}", orderId, transaction_id);
+        // 计算签名信息
+        log.info("蓝兔微信支付异步通知请求解析后的结果：{}", result);
+        // 模拟业务进行处理
+        return LantuPayConstant.SUCCESS;
+
     }
+
+    /**
+     * 自定义query转为map
+     * @param query
+     * @return
+     */
+    private Map<String, String> parseQueryString(String query) {
+        return Arrays.stream(query.split("&"))
+                .map(param -> param.split("="))
+                .collect(Collectors.toMap(
+                        e -> URLDecoder.decode(e[0], StandardCharsets.UTF_8), // 解码键
+                        e -> e.length > 1 ? URLDecoder.decode(e[1], StandardCharsets.UTF_8) : "", // 解码值，如果存在
+                        (prev, next) -> next, // 如果有重复的键，使用最新的值
+                        LinkedHashMap::new)); // 保持插入顺序
+    }
+
+
 }
+

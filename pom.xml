@@ -78,7 +78,7 @@
        
     </dependencyManagement>
     
-    <build>
+    <build>z
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

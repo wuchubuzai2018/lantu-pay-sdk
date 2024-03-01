@@ -2,6 +2,6 @@ server:
   port: 9001
 ltzf:
   wx:
-    mch-id: "xxxx"
-    secret-key: "xxxx"
-    notify-url: "xxxxxxx"
+    mch-id:
+    secret-key:
+    notify-url: http://hm9mat.natappfree.cc/demo/notify
