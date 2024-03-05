@@ -80,13 +80,9 @@ public class LantuWxPaySignUtil {
      * @return true - 签名校验成功，false - 签名校验失败
      */
     public static boolean checkSign(Map<String, String> params, String signKey) {
-        System.out.println("查看key: " + signKey);
-        System.out.println("查看sign: " + params.get("sign"));
         String signUsed = params.get("sign");
         String sign = createMapSign(params, signKey, new String[0]);
-        String testSign = params.get("sign");
         // 问题原因： 在进入createMapSign之后， 已经删除了sign。所以通过params.get("sign")肯定无法得到
-        System.out.println(testSign);
         return sign.equals(signUsed);
     }
 }

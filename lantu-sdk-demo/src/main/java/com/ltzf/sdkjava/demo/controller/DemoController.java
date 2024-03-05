@@ -1,5 +1,4 @@
 package com.ltzf.sdkjava.demo.controller;
-import cn.hutool.core.net.URLDecoder;
 import cn.ltzf.sdkjava.api.LantuWxPayService;
 import cn.ltzf.sdkjava.bean.request.LantuWxPayGetWechatOpenIdRequest;
 import cn.ltzf.sdkjava.bean.request.LantuWxPayNativeOrderRequest;
@@ -21,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -95,29 +96,6 @@ public class DemoController {
         result.put("url", wechatOpenIdAuthorizeUrl);
         return result;
     }
-    
-    /**
-     * 测试蓝兔支付 接收订单的支付回调
-     *
-     * @return
-     */
-//    @GetMapping("/notify")
-//    public String notify(Map<String, String> params) {
-//        try {
-//            if (params == null || params.isEmpty()) {
-//                return LantuPayConstant.FAIL;
-//            }
-//            // 将参数转换为JSON
-//            String json = JSON.toJSONString(params);
-//            log.info("支付回调接口接收到参数:{}", json);
-//            LantuWxPayNotifyOrderResult result = this.lantuWxPayService.parseOrderNotifyResult(json);
-//            // 计算签名信息
-//            log.info("蓝兔微信支付异步通知请求解析后的对象：{}", result);
-//            // 模拟业务进行处理
-//            return LantuPayConstant.SUCCESS;
-//        } catch (Exception e) {
-//            return LantuPayConstant.FAIL;
-//        }
 
     /**
      * 支付回调
@@ -126,8 +104,6 @@ public class DemoController {
      */
     @PostMapping("/notify")
     public String notify(@RequestBody String requestBody){
-
-        System.out.println();
         log.info("requestBody： {}", requestBody);
         Map<String,String> params = new HashMap<String,String>();
         params = parseQueryString(requestBody);
@@ -152,14 +128,14 @@ public class DemoController {
      * @param query
      * @return
      */
-    private Map<String, String> parseQueryString(String query) {
-        return Arrays.stream(query.split("&"))
-                .map(param -> param.split("="))
-                .collect(Collectors.toMap(
-                        e -> URLDecoder.decode(e[0], StandardCharsets.UTF_8), // 解码键
-                        e -> e.length > 1 ? URLDecoder.decode(e[1], StandardCharsets.UTF_8) : "", // 解码值，如果存在
-                        (prev, next) -> next, // 如果有重复的键，使用最新的值
-                        LinkedHashMap::new)); // 保持插入顺序
+    private Map<String, String> parseQueryString(String query)  {
+       return Arrays.stream(query.split("&"))
+               .map(param -> param.split("="))
+               .collect(Collectors.toMap(
+                       e -> URLDecoder.decode(e[0]), // 解码键
+                       e -> e.length > 1 ? URLDecoder.decode(e[1]) : "", // 解码值，如果存在
+                       (prev, next) -> next, // 如果有重复的键，使用最新的值
+                           LinkedHashMap::new)); // 保持插入顺序
     }
 
 

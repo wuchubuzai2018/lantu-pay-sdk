@@ -4,4 +4,4 @@ ltzf:
   wx:
     mch-id:
     secret-key:
-    notify-url: http://hm9mat.natappfree.cc/demo/notify
+    notify-url:
